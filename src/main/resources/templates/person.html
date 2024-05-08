@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{layout}" xmlns:sec="http://www.w3.org/1999/xhtml">
+      <!--layout:decorate="~{layout}"-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -12,7 +13,8 @@
 <div layout:fragment="content">
     <h1>Profile</h1>
     <div class="row">
-        <form method="POST" th:action="@{/update-person}" th:object="${person}" class="col-5">
+        <!--form method="POST" th:action="@{/update-person}" th:object="${person}" class="col-5"-->
+        <form method="POST" sec:authorize="hasAuthority('UPDATE_PERSON')" th:action="@{/update-person}" th:object="${person}" class="col-5">
             <div class="form-group">
                 <label for="firstName">First Name</label>
                 <input type="text" name="firstName" class="form-control" id="firstName" th:value="${person.firstName}">
@@ -50,7 +52,8 @@
                     <p>Are you sure you want to delete this user?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger" id="deleteUser">Delete</button>
+                    <!--button type="submit" class="btn btn-danger" id="deleteUser">Delete</button-->
+                    <button type="submit" sec:authorize="hasAuthority('UPDATE_PERSON')" class="btn btn-danger" id="deleteUser">Delete</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>

@@ -12,7 +12,8 @@
 <div layout:fragment="content">
     <h1>Users</h1>
 
-    <div class="input-group">
+    <!--div class="input-group"-->
+    <div class="input-group" sec:authorize="hasAuthority('VIEW_PERSONS_LIST')">
         <input type="text" id="searchInput" class="form-control" placeholder="Search...">
         <div class="input-group-append">
             <button id="searchButton" class="btn btn-outline-secondary" type="button">Search</button>
@@ -20,7 +21,8 @@
     </div>
     <div class="invisible" id="searchContainer">You searched for <span id="searchTerm"></span></div>
 
-    <table class="table">
+    <!--table class="table"-->
+    <table class="table" sec:authorize="hasAuthority('VIEW_PERSONS_LIST')">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -36,7 +38,8 @@
             <td th:text="${person.firstName}"></td>
             <td th:text="${person.lastName}"></td>
             <td th:text="${person.email}"></td>
-            <td><a th:href="@{/persons/{id}(id=${person.id})}">View profile</a></td>
+            <!--td><a th:href="@{/persons/{id}(id=${person.id})}">View profile</a></td-->
+            <td><a sec:authorize="hasAuthority('VIEW_PERSON')" th:href="@{/persons/{id}(id=${person.id})}">View profile</a></td>
         </tr>
         </tbody>
     </table>
