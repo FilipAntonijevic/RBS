@@ -1,5 +1,6 @@
 package com.urosdragojevic.realbookstore.repository;
 
+import com.urosdragojevic.realbookstore.audit.AuditLogger;
 import com.urosdragojevic.realbookstore.domain.Rating;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,17 +36,26 @@ public class RatingRepository {
                     preparedStatement.setInt(2, rating.getBookId());
                     preparedStatement.setInt(3, rating.getUserId());
                     preparedStatement.executeUpdate();
+                }catch(SQLException e){
+                    e.printStackTrace();
+                    LOG.warn("Failed to update the rating.");
                 }
+                AuditLogger.getAuditLogger(RatingRepository.class).audit("Successfully updated ratings of book with id: " + rating.getBookId());
             } else {
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query3)) {
                     preparedStatement.setInt(1, rating.getBookId());
                     preparedStatement.setInt(2, rating.getUserId());
                     preparedStatement.setInt(3, rating.getRating());
                     preparedStatement.executeUpdate();
+                }catch (SQLException e) {
+                    e.printStackTrace();
+                    LOG.warn("Failed to insert the rating.");
                 }
+                AuditLogger.getAuditLogger(RatingRepository.class).audit("Successfully inserted rating of book with id: " + rating.getBookId());
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            LOG.warn("Failed to get books rating. More info : Book id: " + rating.getBookId());
         }
     }
 
@@ -60,6 +70,7 @@ public class RatingRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            LOG.warn("Failed to list all ratings for book with id: : " + bookId);
         }
         return ratingList;
     }

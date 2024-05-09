@@ -34,6 +34,7 @@ public class PersonRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            LOG.warn("Failed to list all persons.");
         }
         return personList;
     }
@@ -48,6 +49,9 @@ public class PersonRepository {
             while (rs.next()) {
                 personList.add(createPersonFromResultSet(rs));
             }
+        }catch (SQLException e) {
+            e.printStackTrace();
+            LOG.warn("Searching for person with term : " + searchTerm + " failed.");
         }
         return personList;
     }
@@ -75,6 +79,7 @@ public class PersonRepository {
             statement.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
+            LOG.warn("Failed to find person with ID : " + personId);
         }
     }
 
@@ -94,12 +99,16 @@ public class PersonRepository {
              PreparedStatement statement = connection.prepareStatement(query);
         ) {
             String firstName = personUpdate.getFirstName() != null ? personUpdate.getFirstName() : personFromDb.getFirstName();
+            AuditLogger.getAuditLogger(PersonRepository.class).audit("First name changed from : " + personFromDb.getFirstName() + " to " + personUpdate.getFirstName());
             String email = personUpdate.getEmail() != null ? personUpdate.getEmail() : personFromDb.getEmail();
+            AuditLogger.getAuditLogger(PersonRepository.class).audit("email changed from : " + personFromDb.getEmail() + " to " + personUpdate.getEmail());
             statement.setString(1, firstName);
             statement.setString(2, email);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            LOG.warn("Failed to update person. More info : " + personUpdate.toString());
         }
+        AuditLogger.getAuditLogger(PersonRepository.class).audit("Person info successfully updated. " + personUpdate.toString());
     }
 }

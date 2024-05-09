@@ -1,5 +1,6 @@
 package com.urosdragojevic.realbookstore.repository;
 
+import com.urosdragojevic.realbookstore.audit.AuditLogger;
 import com.urosdragojevic.realbookstore.domain.Genre;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +37,11 @@ public class GenreRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            LOG.warn("Failed to list all genres.");
         }
         return genreList;
     }
+
 
     public List<Genre> getAllForBook(int bookId) {
         List<Genre> genreList = new ArrayList<>();
@@ -52,6 +55,7 @@ public class GenreRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        AuditLogger.getAuditLogger(GenreRepository.class).audit("Genres : " + genreList.toString());
         return genreList;
     }
 

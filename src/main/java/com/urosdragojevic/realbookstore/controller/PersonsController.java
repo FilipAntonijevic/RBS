@@ -50,7 +50,6 @@ public class PersonsController {
             model.addAttribute("person", personRepository.get("" + id));
             return "person";
         }
-
         throw new AccessDeniedException("Forbidden");
     }
 
@@ -86,7 +85,7 @@ public class PersonsController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         var current_user = (User) authentication.getPrincipal();
-        if(Integer.valueOf(person.getId()) != current_user.getId())
+        if(Integer.parseInt(person.getId()) != current_user.getId())
             throw new AccessDeniedException("Forbidden");
 
         personRepository.update(person);
